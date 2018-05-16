@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -147,6 +148,31 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         SynchronisationApiToDb(releases);
+                    }
+                });
+
+                // Click event Search artist
+                Button btnSearch = (Button)findViewById(R.id.buttonSearchByArtist);
+                btnSearch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditText editArtist = findViewById(R.id.editArtist);
+                        String artistSearch = editArtist.getText().toString();
+                        // On filtre en fonction de l'artist saisi
+                        if(!artistSearch.isEmpty()){
+                            ArrayList<Release> releasesFiltered = new ArrayList<>(releases);
+                            for (Release myRelease : releases) {
+                                if (!myRelease.getTitle().toString().toLowerCase().contains(artistSearch.toLowerCase())){
+                                    releasesFiltered.remove(myRelease);
+                                }
+                            }
+                            ReleaseAdapter releaseAdapter = new ReleaseAdapter(MainActivity.this, releasesFiltered);
+                            listReleases.setAdapter(releaseAdapter);
+                        }
+                        else{
+                            ReleaseAdapter releaseAdapter = new ReleaseAdapter(MainActivity.this, releases);
+                            listReleases.setAdapter(releaseAdapter);
+                        }
                     }
                 });
 
